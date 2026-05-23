@@ -1,0 +1,14 @@
+{
+  "name": "@compliance/mobile",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "expo start",
+    "build": "expo build"
+  },
+  "dependencies": {
+    "expo": "^50.0.0",
+    "react": "~18.2.0",
+    "react-native": "0.73.0",
+    "axios": "^1.6.2"
+  }
+}

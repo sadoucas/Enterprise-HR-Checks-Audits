@@ -1,0 +1,10 @@
+{
+  "name": "@compliance/shared",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

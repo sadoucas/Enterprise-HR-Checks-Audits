@@ -1,0 +1,17 @@
+node_modules/
+.pnpm-store/
+dist/
+build/
+.next/
+out/
+.env
+.env.local
+.env.*.local
+.vscode/
+.idea/
+*.swp
+.DS_Store
+coverage/
+.turbo/
+logs/
+*.log
