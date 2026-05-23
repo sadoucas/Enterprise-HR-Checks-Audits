@@ -14,16 +14,20 @@ enum UserRole {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  password      String
-  firstName     String
-  lastName      String
-  role          UserRole  @default(EMPLOYEE)
-  isActive      Boolean   @default(true)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  lastLogin     DateTime?
+  id                String    @id @default(cuid())
+  email             String    @unique
+  password          String
+  firstName         String
+  lastName          String
+  role              UserRole  @default(EMPLOYEE)
+  isActive          Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  lastLogin         DateTime?
+  resetToken        String?
+  resetTokenExpiry  DateTime?
 
   @@index([email])
+  @@index([role])
+  @@index([isActive])
 }
