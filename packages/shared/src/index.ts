@@ -10,3 +10,10 @@ export enum FormStatus {
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED',
 }
+
+export enum ChecklistStatus {
+  PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  VERIFIED = 'VERIFIED',
+}

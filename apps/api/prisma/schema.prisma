@@ -20,6 +20,13 @@ enum FormStatus {
   REJECTED
 }
 
+enum ChecklistStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  VERIFIED
+}
+
 model User {
   id                String    @id @default(cuid())
   email             String    @unique
@@ -34,24 +41,40 @@ model User {
   resetToken        String?
   resetTokenExpiry  DateTime?
 
-  // Relations
   submittedForms    Form[]    @relation("SubmittedBy")
+  completedChecklists Checklist[] @relation("CompletedBy")
+  verifiedChecklists Checklist[] @relation("VerifiedBy")
 
   @@index([email])
   @@index([role])
   @@index([isActive])
 }
 
+model Site {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  location    String
+  address     String?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  departments Department[]
+  checklists  Checklist[]
+
+  @@index([name])
+}
+
 model Department {
   id          String    @id @default(cuid())
   name        String
   siteId      String
+  site        Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
   description String?
   isActive    Boolean   @default(true)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  // Relations
   forms       Form[]
 
   @@unique([siteId, name])
@@ -69,14 +92,13 @@ model Form {
   submittedBy       User?     @relation("SubmittedBy", fields: [submittedById], references: [id], onDelete: SetNull)
   submittedAt       DateTime?
   approvedAt        DateTime?
-  requiredFields    String[]  // JSON array of required field names
-  formData          String    // JSON blob for form responses
+  requiredFields    String[]  // JSON array
+  formData          String    // JSON
   signatureRequired Boolean   @default(false)
-  signatureData     String?   // JSON blob for signature
+  signatureData     String?   // JSON
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
-  // Relations
   responses         FormResponse[]
 
   @@index([departmentId])
@@ -88,9 +110,50 @@ model FormResponse {
   id            String    @id @default(cuid())
   formId        String
   form          Form      @relation(fields: [formId], references: [id], onDelete: Cascade)
-  responseData  String    // JSON blob
+  responseData  String    // JSON
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   @@index([formId])
+}
+
+model Checklist {
+  id                String    @id @default(cuid())
+  title             String
+  description       String?
+  siteId            String
+  site              Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  status            ChecklistStatus @default(PENDING)
+  completedById     String?
+  completedBy       User?     @relation("CompletedBy", fields: [completedById], references: [id], onDelete: SetNull)
+  completedAt       DateTime?
+  verifiedById      String?
+  verifiedBy        User?     @relation("VerifiedBy", fields: [verifiedById], references: [id], onDelete: SetNull)
+  verifiedAt        DateTime?
+  verificationNotes String?
+  requiredFields    String[]  // JSON array
+  items             String    // JSON array
+  checklistData     String    // JSON
+  signatureRequired Boolean   @default(false)
+  signatureData     String?   // JSON
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  responses         ChecklistResponse[]
+
+  @@index([siteId])
+  @@index([status])
+  @@index([completedById])
+  @@index([verifiedById])
+}
+
+model ChecklistResponse {
+  id            String    @id @default(cuid())
+  checklistId   String
+  checklist     Checklist @relation(fields: [checklistId], references: [id], onDelete: Cascade)
+  responseData  String    // JSON
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([checklistId])
 }
