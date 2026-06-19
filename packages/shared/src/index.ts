@@ -17,3 +17,10 @@ export enum ChecklistStatus {
   COMPLETED = 'COMPLETED',
   VERIFIED = 'VERIFIED',
 }
+
+export enum AuditStatus {
+  SCHEDULED = 'SCHEDULED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  REPORTED = 'REPORTED',
+}

@@ -27,6 +27,13 @@ enum ChecklistStatus {
   VERIFIED
 }
 
+enum AuditStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  REPORTED
+}
+
 model User {
   id                String    @id @default(cuid())
   email             String    @unique
@@ -44,6 +51,7 @@ model User {
   submittedForms    Form[]    @relation("SubmittedBy")
   completedChecklists Checklist[] @relation("CompletedBy")
   verifiedChecklists Checklist[] @relation("VerifiedBy")
+  conductedAudits   Audit[]   @relation("ConductedBy")
 
   @@index([email])
   @@index([role])
@@ -61,6 +69,7 @@ model Site {
 
   departments Department[]
   checklists  Checklist[]
+  audits      Audit[]
 
   @@index([name])
 }
@@ -156,4 +165,44 @@ model ChecklistResponse {
   updatedAt     DateTime  @updatedAt
 
   @@index([checklistId])
+}
+
+model Audit {
+  id                String    @id @default(cuid())
+  title             String
+  description       String?
+  siteId            String
+  site              Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  status            AuditStatus @default(SCHEDULED)
+  conductedById     String
+  conductedBy       User      @relation("ConductedBy", fields: [conductedById], references: [id], onDelete: Restrict)
+  scheduledDate     DateTime
+  completedAt       DateTime?
+  reportedAt        DateTime?
+  requiredFields    String[]  // JSON array
+  auditData         String    // JSON
+  findingsSummary   String?   // JSON: {CRITICAL: 0, HIGH: 0, MEDIUM: 0, LOW: 0}
+  reportData        String?   // JSON
+  signatureRequired Boolean   @default(false)
+  signatureData     String?   // JSON
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  responses         AuditResponse[]
+
+  @@index([siteId])
+  @@index([status])
+  @@index([conductedById])
+  @@index([scheduledDate])
+}
+
+model AuditResponse {
+  id            String    @id @default(cuid())
+  auditId       String
+  audit         Audit     @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  responseData  String    // JSON
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([auditId])
 }
