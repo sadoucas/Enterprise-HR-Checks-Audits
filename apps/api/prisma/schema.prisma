@@ -34,6 +34,20 @@ enum AuditStatus {
   REPORTED
 }
 
+enum WarningType {
+  VERBAL
+  WRITTEN
+  SUSPENSION
+  TERMINATION
+}
+
+enum WarningStatus {
+  ISSUED
+  ACKNOWLEDGED
+  APPEALED
+  RESOLVED
+}
+
 model User {
   id                String    @id @default(cuid())
   email             String    @unique
@@ -52,6 +66,8 @@ model User {
   completedChecklists Checklist[] @relation("CompletedBy")
   verifiedChecklists Checklist[] @relation("VerifiedBy")
   conductedAudits   Audit[]   @relation("ConductedBy")
+  issuedWarnings    Warning[] @relation("IssuedBy")
+  receivedWarnings  Warning[] @relation("ReceivedBy")
 
   @@index([email])
   @@index([role])
@@ -205,4 +221,35 @@ model AuditResponse {
   updatedAt     DateTime  @updatedAt
 
   @@index([auditId])
+}
+
+model Warning {
+  id                    String    @id @default(cuid())
+  title                 String
+  description           String
+  type                  WarningType
+  status                WarningStatus @default(ISSUED)
+  issuedById            String
+  issuedBy              User      @relation("IssuedBy", fields: [issuedById], references: [id], onDelete: Restrict)
+  receivedById          String
+  receivedBy            User      @relation("ReceivedBy", fields: [receivedById], references: [id], onDelete: Restrict)
+  issuedAt              DateTime  @default(now())
+  acknowledgedAt        DateTime?
+  appealedAt            DateTime?
+  resolvedAt            DateTime?
+  acknowledgmentRequired Boolean   @default(true)
+  signatureRequired     Boolean   @default(false)
+  signatureData         String?   // JSON
+  appealReason          String?
+  supportingNotes       String?
+  resolutionNotes       String?
+  outcome               String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([issuedById])
+  @@index([receivedById])
+  @@index([status])
+  @@index([type])
+  @@index([issuedAt])
 }

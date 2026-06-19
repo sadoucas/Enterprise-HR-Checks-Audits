@@ -24,3 +24,17 @@ export enum AuditStatus {
   COMPLETED = 'COMPLETED',
   REPORTED = 'REPORTED',
 }
+
+export enum WarningType {
+  VERBAL = 'VERBAL',
+  WRITTEN = 'WRITTEN',
+  SUSPENSION = 'SUSPENSION',
+  TERMINATION = 'TERMINATION',
+}
+
+export enum WarningStatus {
+  ISSUED = 'ISSUED',
+  ACKNOWLEDGED = 'ACKNOWLEDGED',
+  APPEALED = 'APPEALED',
+  RESOLVED = 'RESOLVED',
+}
