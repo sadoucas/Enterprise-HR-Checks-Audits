@@ -7,6 +7,7 @@ import { FormsModule } from './modules/forms/forms.module';
 import { ChecklistsModule } from './modules/checklists/checklists.module';
 import { AuditsModule } from './modules/audits/audits.module';
 import { WarningsModule } from './modules/warnings/warnings.module';
+import { MessagingModule } from './modules/messaging/messaging.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { WarningsModule } from './modules/warnings/warnings.module';
     ChecklistsModule,
     AuditsModule,
     WarningsModule,
+    MessagingModule,
   ],
 })
 export class AppModule {}

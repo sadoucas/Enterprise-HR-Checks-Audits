@@ -38,3 +38,23 @@ export enum WarningStatus {
   APPEALED = 'APPEALED',
   RESOLVED = 'RESOLVED',
 }
+
+export enum MessageType {
+  ALERT = 'ALERT',
+  NOTIFICATION = 'NOTIFICATION',
+  WARNING = 'WARNING',
+  GENERAL = 'GENERAL',
+}
+
+export enum MessagePriority {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  URGENT = 'URGENT',
+}
+
+export enum DeliveryStatus {
+  PENDING = 'PENDING',
+  DELIVERED = 'DELIVERED',
+  FAILED = 'FAILED',
+}
