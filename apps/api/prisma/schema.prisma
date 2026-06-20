@@ -68,6 +68,35 @@ enum DeliveryStatus {
   FAILED
 }
 
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AnomalyType {
+  ABSENCE
+  PERFORMANCE_DROP
+  MULTIPLE_WARNINGS
+  AUDIT_FAILURES
+  PATTERN_CHANGE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+  PENDING_RENEWAL
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
 model User {
   id                String    @id @default(cuid())
   email             String    @unique
@@ -109,6 +138,7 @@ model Site {
   departments Department[]
   checklists  Checklist[]
   audits      Audit[]
+  subscriptions SiteSubscription[]
 
   @@index([name])
 }
@@ -332,4 +362,64 @@ model MessageReply {
 
   @@index([messageId])
   @@index([senderId])
+}
+
+model SubscriptionPlan {
+  id                 String    @id @default(cuid())
+  name               String    @unique
+  description        String
+  pricePerSite       Float     // Price charged per site in dollars
+  billingCycleDays   Int       @default(30)
+  features           String[]  // JSON array of features
+  maxAudits          Int?
+  maxUsers           Int?
+  isActive           Boolean   @default(true)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  subscriptions      SiteSubscription[]
+
+  @@index([isActive])
+}
+
+model SiteSubscription {
+  id                 String    @id @default(cuid())
+  siteId             String
+  site               Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  planId             String
+  plan               SubscriptionPlan @relation(fields: [planId], references: [id], onDelete: Restrict)
+  status             SubscriptionStatus @default(ACTIVE)
+  startDate          DateTime  @default(now())
+  renewalDate        DateTime  // Next renewal date
+  amountPerCycle     Float     // Amount charged per cycle
+  paymentMethodId    String?   // Payment method reference
+  cancelledAt        DateTime?
+  cancellationReason String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  payments           SubscriptionPayment[]
+
+  @@unique([siteId])
+  @@index([siteId])
+  @@index([planId])
+  @@index([status])
+  @@index([renewalDate])
+}
+
+model SubscriptionPayment {
+  id               String    @id @default(cuid())
+  subscriptionId   String
+  subscription     SiteSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  amount           Float
+  status           PaymentStatus @default(PENDING)
+  paymentMethodId  String?   // Payment method reference
+  notes            String?
+  processedAt      DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([subscriptionId])
+  @@index([status])
+  @@index([createdAt])
 }

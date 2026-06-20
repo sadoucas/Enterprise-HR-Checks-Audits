@@ -73,3 +73,17 @@ export enum AnomalyType {
   AUDIT_FAILURES = 'AUDIT_FAILURES',
   PATTERN_CHANGE = 'PATTERN_CHANGE',
 }
+
+export enum SubscriptionStatus {
+  ACTIVE = 'ACTIVE',
+  CANCELLED = 'CANCELLED',
+  EXPIRED = 'EXPIRED',
+  PENDING_RENEWAL = 'PENDING_RENEWAL',
+}
+
+export enum PaymentStatus {
+  PENDING = 'PENDING',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED',
+  REFUNDED = 'REFUNDED',
+}
