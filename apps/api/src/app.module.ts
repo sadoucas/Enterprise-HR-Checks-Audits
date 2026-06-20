@@ -8,6 +8,7 @@ import { ChecklistsModule } from './modules/checklists/checklists.module';
 import { AuditsModule } from './modules/audits/audits.module';
 import { WarningsModule } from './modules/warnings/warnings.module';
 import { MessagingModule } from './modules/messaging/messaging.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { MessagingModule } from './modules/messaging/messaging.module';
     AuditsModule,
     WarningsModule,
     MessagingModule,
+    AnalyticsModule,
   ],
 })
 export class AppModule {}

@@ -58,3 +58,18 @@ export enum DeliveryStatus {
   DELIVERED = 'DELIVERED',
   FAILED = 'FAILED',
 }
+
+export enum RiskLevel {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL',
+}
+
+export enum AnomalyType {
+  ABSENCE = 'ABSENCE',
+  PERFORMANCE_DROP = 'PERFORMANCE_DROP',
+  MULTIPLE_WARNINGS = 'MULTIPLE_WARNINGS',
+  AUDIT_FAILURES = 'AUDIT_FAILURES',
+  PATTERN_CHANGE = 'PATTERN_CHANGE',
+}
